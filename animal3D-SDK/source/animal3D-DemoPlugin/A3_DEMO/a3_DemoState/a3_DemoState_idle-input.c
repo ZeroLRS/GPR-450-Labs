@@ -107,7 +107,27 @@ void a3demo_input_main(a3_DemoState *demoState, a3f64 dt)
 
 		// ****TO-DO
 		// test sprite controller
+		// If the C key is pressed, iterate through the possible play directions
+		if (a3keyboardIsPressed(demoState->keyboard, a3key_C))
+		{
+			// The new direction to move
+			a3_ClipPlayDirection newDir = 0;
+			if (demoState->testSpriteSheetClipController->playDirection == a3clip_playReverse)
+			{
+				newDir = a3clip_stop;
+			}
+			else if (demoState->testSpriteSheetClipController->playDirection == a3clip_stop)
+			{
+				newDir = a3clip_playForward;
+			}
+			else if (demoState->testSpriteSheetClipController->playDirection == a3clip_playForward)
+			{
+				newDir = a3clip_playReverse;
+			}
 
+			// Set the new direction to the clip controller
+			a3clipControllerSetPlayDirection(demoState->testSpriteSheetClipController, newDir);
+		}
 	}
 }
 

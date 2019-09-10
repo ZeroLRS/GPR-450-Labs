@@ -60,10 +60,11 @@ inline a3i32 a3clipControllerUpdate(a3_ClipController* clipCtrl, const a3real dt
 		while (solving)
 		{
 			// If the time we've taken for the current frame is longer than the frame's duration
-			if (clipCtrl->keyframeTimeParam >= 1)
+			//if (clipCtrl->keyframeTimeParam > clipCtrl->clipPtr->duration) // **TO-DO : when duration is implemented, use it
+			if (clipCtrl->keyframeTime > 1)
 			{
 				// Move to the next frame
-				a3ui32 nextIndex = clipCtrl->clipPtr->index + 1;
+				a3ui32 nextIndex = clipCtrl->keyframeIndex_clip + 1;
 
 				// If we are past the last index, reset to the start
 				if (nextIndex >= clipCtrl->clipPtr->keyframeFinal)
@@ -72,12 +73,15 @@ inline a3i32 a3clipControllerUpdate(a3_ClipController* clipCtrl, const a3real dt
 				}
 				a3clipController_internalSetKeyframe(clipCtrl, nextIndex);
 
-				// Now that we've moved to a new frame, reset how long we've spent on it
-				clipCtrl->keyframeTimeParam = 0;
+				// Now that we've moved to a new frame, remove how long we've spent on it
+				//clipCtrl->keyframeTimeParam -= clipCtrl->clipPtr->duration; // **TO-DO : when duration is implemented, use it
+				clipCtrl->keyframeTime -= 1;
 			}
-
-			//dummy
-			solving = 0;
+			// If we no longer have excess time to move frames in, exit loop
+			else
+			{
+				solving = 0;
+			}
 		}
 
 		// update parameter
